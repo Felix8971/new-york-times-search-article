@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?api_key=dfdf286b06d14bbfb24f2898357d4672';

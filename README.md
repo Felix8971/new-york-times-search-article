@@ -14,7 +14,7 @@ Using the New York Times's API.
 
 #### API
 
-https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=dfdf286b06d14bbfb24f2898357d4672
+https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=
 
 &sort=newest
 &begin_date=20170101

@@ -8,6 +8,7 @@ const headerStyle = {
   justifyContent: 'flex-start',
   justifyItems: 'center',
   alignItems: 'center',
+  marginBottom: 20,
 }
 
 const Header = () => (

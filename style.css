@@ -1,0 +1,51 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+	line-height: 1;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+.unorderedList {
+ 
+}
+
+h1 {
+  margin: 20px 0;
+}
+
+h2 {
+    margin: 15px 0;
+}
+
+h3 {
+    margin: 5px 0;
+}
+
+p {
+    margin: 5px 0;  
+    line-height: 1.2em;
+}
+
+.search{
+    margin: 20px 0; 
+}
+
+.item {
+    display:flex;
+    flex-direction:row;
+    margin:5px 0 5px 0;
+    border:1px solid grey;
+    cursor:pointer;
+}
+
+
+.thumbnail{
+    width:75px;
+    height:75px;
+}

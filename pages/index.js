@@ -1,7 +1,11 @@
 
-import Layout from '../components/MyLayout.js'
-import Link from 'next/link'
-import fetch from 'isomorphic-unfetch'
+import Layout from '../components/MyLayout.js';
+import Link from 'next/link';
+import fetch from 'isomorphic-unfetch';
+import debounce  from 'lodash/debounce';
+
+import { BASE_URL } from '../constants';
+import "../style.css"
 
 export default class extends React.Component {
   
@@ -9,76 +13,94 @@ export default class extends React.Component {
     super();
     this.state = {
       q: '',
-      sort : 'newest',
+      articles: [],
     }
-  }
-
-  componentDidMount() {
-   
+    this.handleInputChange = debounce(this.handleInputChange, 1000);
+    this.firstRender = true;
   }
 
   static async getInitialProps({req, query}) {
-    //const res = await fetch('https://api.tvmaze.com/search/shows?q=batman')
+
     console.log('req=',req);
     console.log('query=',query);
-    const res = await fetch('https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=dfdf286b06d14bbfb24f2898357d4672');
+    const q = query.q ? query.q.trim() : '';
+    const url = !!q ? BASE_URL +'&q=' + q : BASE_URL;
+    const res = await fetch(url);
     const data = await res.json();
-    console.log('data.response.docs:', data.response.docs);
+    //console.log('data.response.docs:', data.response.docs);
     console.log(`Show data fetched. Count: ${data.response.docs.length}`);
   
     return {
       articles: data.response.docs
     }
   }
+
+  // On Our Radar: A Subglacial Lake
+  handleInputChange(event) {
+    //console.log(event.target.value);
+    const value = this.search.value;//event.target.value;
+    this.setState({q: value});
+    const q = value ? value.trim() : '';
+    const url = BASE_URL + (!!q ? '&q='+ q : '');
+    console.log('==> url:', url);
+    debugger;
   
+    fetch(url)
+    .then(resp => resp.json())
+    .then((data) => {
+      debugger;
+      console.log('==> data.response.docs:', data.response.docs);
+      if ( data.response.docs && data.response.docs.length > 0){
+        this.setState({articles: data.response.docs});
+      } else {
+        this.setState({articles: []});
+      }
+    })
+    .catch((error) => {
+      debugger;
+      console.log('==> ERROR');
+      this.setState({articles: []});
+    });
+  }
 
   render() {
+    let articles;
+    if ( this.firstRender ) {
+      articles = this.props.articles;
+      this.firstRender = false;
+    } else {
+      articles = this.state.articles;
+    }
+   
+    console.log('articles=',articles);
     return (
       <Layout>
       <h1>New York Time Search Articles</h1>
-      <input ></input>
-      <ul>
-        {this.props.articles.map((article) => (
-          <li key={article._id}>
-            <Link as={`/p/${article._id}`} href={`/post?id=${article._id}`} >
-              <a>{article.headline.main}</a>
-            </Link>
-          </li>
-        ))} 
-        </ul> 
+      <div className='search'>
+        Search <input onChange={(e) => this.handleInputChange(e) } ref={input => this.search = input} ></input>
+      </div>
+  
+      <ul className='unorderedList'>
+        { Array.isArray(articles) && articles.length > 0 ? articles.map((article) => (
+            <li key={article._id}>
+              <Link as={`/p/${article._id}`} href={`/post?id=${article._id}&q=${this.state.q}`} >
+                <a className='item'>
+                  { (article.multimedia && article.multimedia.length > 0 && !!article.multimedia[2].url) ?
+                    <img src={'https://www.nytimes.com/' + article.multimedia[2].url} className='thumbnail' alt='thumbnail' /> 
+                    : 
+                    <img src='/static/newyorktimes-logo.jpg' className='thumbnail'  alt='thumbnail' /> 
+                  }
+                  <p className="example">{article.headline.main}</p>
+                </a>
+              </Link>
+            </li>
+          ))
+          :
+          <p>No result found...</p>        
+        } 
+      </ul>
+      
     </Layout>
     )
   }
 }
-
-/*
-const Index = (props) => (
-  <Layout>
-    <h1>New York Time Search Articles</h1>
-    <ul>
-      {props.articles.map((article) => (
-        <li key={article._id}>
-          <Link as={`/p/${article._id}`} href={`/post?id=${article._id}`} >
-            <a>{article.headline.main}</a>
-          </Link>
-        </li>
-      ))} 
-      </ul> 
-  </Layout>
-)
-
-Index.getInitialProps = async function({req, query}) {
-  //const res = await fetch('https://api.tvmaze.com/search/shows?q=batman')
-  console.log('req=',req);
-  console.log('query=',query);
-  const res = await fetch('https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=dfdf286b06d14bbfb24f2898357d4672&begin_date=20170101&end_date=20180505');
-  const data = await res.json();
-  console.log('data.response.docs:', data.response.docs);
-  console.log(`Show data fetched. Count: ${data.response.docs.length}`);
-
-  return {
-    articles: data.response.docs
-  }
-}
-*/
-//export default Index
