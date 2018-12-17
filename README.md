@@ -15,13 +15,3 @@ Using the New York Times's API.
 #### API
 
 https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=
-
-&sort=newest
-&begin_date=20170101
-&end_date=20180505
-&fl=headline, web_url, pub_date, snippet, _id, by_line, multimedia
-
-For images: use response.docs.multimedia.url
-Example: images/2018/04/15/world/00taiwan-hongkong-1/merlin_136317102_1934f1d5-f6ea-4010-b116-b03c7fa14247-articleLarge.jpg
-==>  https://www.nytimes.com/images/2018/04/15/world/00taiwan-hongkong-1/merlin_136317102_1934f1d5-f6ea-4010-b116-b03c7fa14247-articleLarge.jpg
-
