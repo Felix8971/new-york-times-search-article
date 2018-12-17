@@ -16,6 +16,6 @@ Using the New York Times's API.
 
 https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=
 
-### idea to improve
+### Ideas to improve
 - add a carroussel on post page to see all images available
 - ...
