@@ -59,16 +59,13 @@ export default class extends React.Component {
   changeSortOption(){
     this.setState({sortOption: this.sortOption.value});
     const url = this.getUrl(this.state.q, this.sortOption.value);
-    //const url = BASE_URL + (!!this.state.q ? '&q='+ this.state.q : '') + ( this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
     this.fetchUrl(url);
   }
 
   handleInputChange() {
-    debugger;
     const value = this.search.value;
     this.setState({q: value});
     const q = value ? value.trim() : '';
-    //const url = this.getUrl(q, this.state.sortOption);
     const url = BASE_URL + (!!q ? '&q='+ q : '') + (this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
     this.fetchUrl(url);
   }
