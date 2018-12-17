@@ -33,7 +33,13 @@ p {
 }
 
 .search{
-    margin: 20px 0; 
+   margin-right:10px;
+}
+
+.form{
+    display:flex;
+    flex-direction:row;
+    padding:5px;
 }
 
 .item {
@@ -42,10 +48,25 @@ p {
     margin:5px 0 5px 0;
     border:1px solid grey;
     cursor:pointer;
+    align-items: center;
 }
 
+.item:hover{
+    background-color: aliceblue;
+}
+
+.info {
+    margin-left: 10px;
+}
+
+.message{
+    margin:10px;
+    color: grey;
+    font-size: 20px;
+}
 
 .thumbnail{
     width:75px;
     height:75px;
+    border: 1px solid gainsboro;
 }

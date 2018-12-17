@@ -13,54 +13,69 @@ export default class extends React.Component {
     super();
     this.state = {
       q: '',
+      sortOption: '',
       articles: [],
+      message:'',
     }
     this.handleInputChange = debounce(this.handleInputChange, 1000);
+    this.changeSortOption = debounce(this.changeSortOption, 100);
     this.firstRender = true;
   }
 
-  static async getInitialProps({req, query}) {
+  formatDate(date){
+    const tab = date.slice(0, 10).split('-');
+    return tab[2]+'/'+tab[1]+'/'+tab[0];
+  }
 
-    console.log('req=',req);
-    console.log('query=',query);
+  static async getInitialProps({req, query}) {
     const q = query.q ? query.q.trim() : '';
     const url = !!q ? BASE_URL +'&q=' + q : BASE_URL;
     const res = await fetch(url);
     const data = await res.json();
-    //console.log('data.response.docs:', data.response.docs);
-    console.log(`Show data fetched. Count: ${data.response.docs.length}`);
   
     return {
       articles: data.response.docs
     }
   }
 
-  // On Our Radar: A Subglacial Lake
-  handleInputChange(event) {
-    //console.log(event.target.value);
-    const value = this.search.value;//event.target.value;
-    this.setState({q: value});
-    const q = value ? value.trim() : '';
-    const url = BASE_URL + (!!q ? '&q='+ q : '');
-    console.log('==> url:', url);
-    debugger;
-  
+
+  fetchUrl(url) {
+    this.setState({message:'Loading...'});
     fetch(url)
     .then(resp => resp.json())
     .then((data) => {
-      debugger;
-      console.log('==> data.response.docs:', data.response.docs);
       if ( data.response.docs && data.response.docs.length > 0){
-        this.setState({articles: data.response.docs});
+        this.setState({articles: data.response.docs, message:''});
       } else {
-        this.setState({articles: []});
+        this.setState({articles: [], message:'No result found.'});
       }
     })
     .catch((error) => {
-      debugger;
       console.log('==> ERROR');
-      this.setState({articles: []});
+      this.setState({articles: [], message:'Error.'});
     });
+  }
+
+  changeSortOption(){
+    this.setState({sortOption: this.sortOption.value});
+    const url = BASE_URL + (!!this.state.q ? '&q='+ this.state.q : '') + ( this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
+    this.fetchUrl(url);
+  }
+
+  handleInputChange() {
+    const value = this.search.value;
+    this.setState({q: value});
+    const q = value ? value.trim() : '';
+    const url = BASE_URL + (!!q ? '&q='+ q : '') + (!!this.state.sortOption ? '&sort='+ this.state.sortOption : '');
+    this.fetchUrl(url);
+  }
+
+  componentWillMount(){
+    console.log('articles===',this.props.articles);
+  }
+
+  componentWillUpdate(){
+    console.log('articles===',this.state.articles);
   }
 
   render() {
@@ -72,31 +87,42 @@ export default class extends React.Component {
       articles = this.state.articles;
     }
    
-    console.log('articles=',articles);
+    const resultOK = Array.isArray(articles) && articles.length > 0; 
+
     return (
       <Layout>
       <h1>New York Time Search Articles</h1>
-      <div className='search'>
-        Search <input onChange={(e) => this.handleInputChange(e) } ref={input => this.search = input} ></input>
-      </div>
-  
+      <form className='form'>
+        <div className='search'>
+          Search:<input onChange={() => this.handleInputChange() } ref={input => this.search = input} ></input>
+        </div>
+        Sort:
+        <select onChange={() => this.changeSortOption()} ref={input => this.sortOption = input}  >
+          <option defaultValue>None</option>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+        </select>
+      </form>
       <ul className='unorderedList'>
-        { Array.isArray(articles) && articles.length > 0 ? articles.map((article) => (
+        { resultOK ? articles.map((article) => (
             <li key={article._id}>
               <Link as={`/p/${article._id}`} href={`/post?id=${article._id}&q=${this.state.q}`} >
-                <a className='item'>
-                  { (article.multimedia && article.multimedia.length > 0 && !!article.multimedia[2].url) ?
+                <div className='item'>
+                  { (article.multimedia && article.multimedia.length > 0 && article.multimedia[2] && article.multimedia[2].url ) ?
                     <img src={'https://www.nytimes.com/' + article.multimedia[2].url} className='thumbnail' alt='thumbnail' /> 
                     : 
                     <img src='/static/newyorktimes-logo.jpg' className='thumbnail'  alt='thumbnail' /> 
                   }
-                  <p className="example">{article.headline.main}</p>
-                </a>
+                  <div className='info'>
+                    <p>{article.headline.main}</p>
+                    {article.pub_date && <p>{this.formatDate(article.pub_date)}</p>}
+                  </div>
+                </div>
               </Link>
             </li>
           ))
           :
-          <p>No result found...</p>        
+          <p className='message'>{this.state.message}</p>        
         } 
       </ul>
       
