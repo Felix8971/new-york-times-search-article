@@ -8,6 +8,10 @@ body {
     
 }
 
+.layout{
+    padding:10px;
+}
+
 ol, ul {
 	list-style: none;
 }
@@ -17,11 +21,11 @@ ol, ul {
 }
 
 h1 {
-  margin: 20px 0;
+  margin: 15px 0;
 }
 
 h2 {
-    margin: 15px 0;
+    margin: 13px 0;
 }
 
 h3 {
@@ -33,14 +37,13 @@ p {
     line-height: 1.2em;
 }
 
-
 .header{ 
     display: flex;
     justify-content: flex-start;
     justify-items: center;
     align-items: center;
     margin-bottom: 20px;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 .search{
@@ -48,11 +51,13 @@ p {
    padding: 3px;
    font-size: 1.5em;
 }
+
 .sort{
     margin-right:10px;
     padding: 3px;
     font-size: 1.5em;
- }
+}
+
 .form{
     display:flex;
     flex-direction:row;
@@ -62,18 +67,27 @@ p {
 .item {
     display:flex;
     flex-direction:row;
-    margin:5px 0 5px 0;
+    margin:8px 0 8px 0;
     border:1px solid grey;
+    border-radius: 2px;
     cursor:pointer;
     align-items: center;
+    max-width: 600px;
+    font-size: 1.3em;
 }
 
 .item:hover{
     background-color: aliceblue;
 }
 
-.info {
-    margin-left: 10px;
+.info-block {
+    padding: 5px;
+    width:80%;
+}
+
+.image-block{
+    padding: 5px;
+    width:20%;
 }
 
 .message{
@@ -89,29 +103,41 @@ p {
 }
 
 .input{
-    height: 26px;
+    height: 28px;
     font-size: 0.9em;
+    border-radius: 2px;
+    border: 1px solid grey;
 }
 
 select {
-    height: 26px;
-    font-size: 20px;
+    height: 30px;
+    font-size: 18px;
+    border-radius: 2px;
+    background: none;
 }
 
 .post-img{
     width:500px;
 }
 
+
+
 /* Small screens */
 @media only screen and (max-width: 450px) {
     .thumbnail{
       border: 1px solid gainsboro;
+     
+    }
+
+    .info-block{
+        margin-left: 15px;
     }
 
     .input{
         height: 30px;
         border: 1px solid black;
-        width: 100%;
+        width: 99%;
+        border-radius: 2px;
     }
 
     .form{
@@ -126,6 +152,7 @@ select {
 
     .nytimesLogo {
         width: 100%;
+        margin-bottom: 10px;
     }
 
     select {
@@ -136,7 +163,7 @@ select {
     }
 
     .item {
-        font-size: 1.5em;
+        font-size: 1.2em;
     }
 
     .sort, .search {
@@ -146,5 +173,9 @@ select {
 
     .post-img{
         width:100%!important;
+    }
+    .title{
+        text-align: center;
+        font-size: 1.8em;
     }
 }

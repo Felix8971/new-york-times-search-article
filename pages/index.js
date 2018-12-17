@@ -74,48 +74,49 @@ export default class extends React.Component {
       articles = this.state.articles;
     }
    
-    const resultOK = Array.isArray(articles) && articles.length > 0; 
+    const somethingToSee = Array.isArray(articles) && articles.length > 0; 
 
     return (
       <Layout>
-      <h1>New York Time Search Articles</h1>
-      <form className='form'>
-        <div className='search'>
-          Search:<input className='input' onChange={() => this.handleInputChange() } ref={input => this.search = input} ></input>
-        </div>
-        <div className='sort'>
-          Sort:
-          <select onChange={() => this.changeSortOption()} ref={input => this.sortOption = input}  >
-            <option defaultValue>None</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-          </select>
-        </div>
-      </form>
-      <ul className='unorderedList'>
-        { resultOK ? articles.map((article) => (
-            <li key={article._id}>
-              <Link  href={`/post?id=${article._id}&q=${this.state.q}`} >
-                <div className='item'>
-                  { (article.multimedia && article.multimedia.length > 0 && article.multimedia[2] && article.multimedia[2].url ) ?
-                    <img src={'https://www.nytimes.com/' + article.multimedia[2].url} className='thumbnail' alt='thumbnail' /> 
-                    : 
-                    <img src='/static/newyorktimes-logo.jpg' className='thumbnail'  alt='thumbnail' /> 
-                  }
-                  <div className='info'>
-                    <p>{article.headline.main}</p>
-                    {article.pub_date && <p>{formatDate(article.pub_date)}</p>}
+        <h1 className='title'>New York Time Search Articles</h1>
+        <form className='form'>
+          <div className='search'>
+            Search:<input className='input' onChange={() => this.handleInputChange() } ref={input => this.search = input} ></input>
+          </div>
+          <div className='sort'>
+            Sort:
+            <select onChange={() => this.changeSortOption()} ref={input => this.sortOption = input}  >
+              <option defaultValue>None</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </div>
+        </form>
+        <ul className='unorderedList'>
+          { somethingToSee ? articles.map((article) => (
+              <li key={article._id}>
+                <Link  href={`/post?id=${article._id}&q=${this.state.q}`} >
+                  <div className='item'>
+                    <div className='image-block'>
+                      { (article.multimedia && article.multimedia.length > 0 && article.multimedia[2] && article.multimedia[2].url ) ?
+                        <img src={'https://www.nytimes.com/' + article.multimedia[2].url} className='thumbnail' alt='thumbnail' /> 
+                        : 
+                        <img src='/static/newyorktimes-logo.jpg' className='thumbnail'  alt='thumbnail' /> 
+                      }
+                    </div> 
+                    <div className='info-block'>
+                      <p>{article.headline.main}</p>
+                      {article.pub_date && <p>{formatDate(article.pub_date)}</p>}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </li>
-          ))
-          :
-          <p className='message'>{this.state.message}</p>        
-        } 
-      </ul>
-      
-    </Layout>
+                </Link>
+              </li>
+            ))
+            :
+            <p className='message'>{this.state.message}</p>        
+          } 
+        </ul> 
+      </Layout>
     )
   }
 }
