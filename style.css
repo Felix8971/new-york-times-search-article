@@ -4,7 +4,8 @@
 }
 
 body {
-	line-height: 1;
+    line-height: 1;
+    
 }
 
 ol, ul {
@@ -32,10 +33,26 @@ p {
     line-height: 1.2em;
 }
 
-.search{
-   margin-right:10px;
+
+.header{ 
+    display: flex;
+    justify-content: flex-start;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 2em;
 }
 
+.search{
+   margin-right:10px;
+   padding: 3px;
+   font-size: 1.5em;
+}
+.sort{
+    margin-right:10px;
+    padding: 3px;
+    font-size: 1.5em;
+ }
 .form{
     display:flex;
     flex-direction:row;
@@ -69,4 +86,65 @@ p {
     width:75px;
     height:75px;
     border: 1px solid gainsboro;
+}
+
+.input{
+    height: 26px;
+    font-size: 0.9em;
+}
+
+select {
+    height: 26px;
+    font-size: 20px;
+}
+
+.post-img{
+    width:500px;
+}
+
+/* Small screens */
+@media only screen and (max-width: 450px) {
+    .thumbnail{
+      border: 1px solid gainsboro;
+    }
+
+    .input{
+        height: 30px;
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    .form{
+        flex-direction: column;
+        padding:0;
+        font-size: 1.2em;
+    }
+
+    .header{
+        flex-direction: column;
+    }
+
+    .nytimesLogo {
+        width: 100%;
+    }
+
+    select {
+        height: 30px;
+        border: 1px solid black;
+        width: 100%;
+        background-color: cornsilk;
+    }
+
+    .item {
+        font-size: 1.5em;
+    }
+
+    .sort, .search {
+        padding: 5px 0 5px 0;
+        margin-right: 0;
+    }
+
+    .post-img{
+        width:100%!important;
+    }
 }

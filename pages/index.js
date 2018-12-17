@@ -4,7 +4,7 @@ import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import debounce  from 'lodash/debounce';
 
-import { BASE_URL } from '../constants';
+import { BASE_URL, formatDate } from '../constants';
 import "../style.css"
 
 export default class extends React.Component {
@@ -20,11 +20,6 @@ export default class extends React.Component {
     this.handleInputChange = debounce(this.handleInputChange, 1000);
     this.changeSortOption = debounce(this.changeSortOption, 100);
     this.firstRender = true;
-  }
-
-  formatDate(date){
-    const tab = date.slice(0, 10).split('-');
-    return tab[2]+'/'+tab[1]+'/'+tab[0];
   }
 
   static async getInitialProps({req, query}) {
@@ -70,14 +65,6 @@ export default class extends React.Component {
     this.fetchUrl(url);
   }
 
-  componentWillMount(){
-    console.log('articles===',this.props.articles);
-  }
-
-  componentWillUpdate(){
-    console.log('articles===',this.state.articles);
-  }
-
   render() {
     let articles;
     if ( this.firstRender ) {
@@ -94,19 +81,21 @@ export default class extends React.Component {
       <h1>New York Time Search Articles</h1>
       <form className='form'>
         <div className='search'>
-          Search:<input onChange={() => this.handleInputChange() } ref={input => this.search = input} ></input>
+          Search:<input className='input' onChange={() => this.handleInputChange() } ref={input => this.search = input} ></input>
         </div>
-        Sort:
-        <select onChange={() => this.changeSortOption()} ref={input => this.sortOption = input}  >
-          <option defaultValue>None</option>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-        </select>
+        <div className='sort'>
+          Sort:
+          <select onChange={() => this.changeSortOption()} ref={input => this.sortOption = input}  >
+            <option defaultValue>None</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
       </form>
       <ul className='unorderedList'>
         { resultOK ? articles.map((article) => (
             <li key={article._id}>
-              <Link as={`/p/${article._id}`} href={`/post?id=${article._id}&q=${this.state.q}`} >
+              <Link  href={`/post?id=${article._id}&q=${this.state.q}`} >
                 <div className='item'>
                   { (article.multimedia && article.multimedia.length > 0 && article.multimedia[2] && article.multimedia[2].url ) ?
                     <img src={'https://www.nytimes.com/' + article.multimedia[2].url} className='thumbnail' alt='thumbnail' /> 
@@ -115,7 +104,7 @@ export default class extends React.Component {
                   }
                   <div className='info'>
                     <p>{article.headline.main}</p>
-                    {article.pub_date && <p>{this.formatDate(article.pub_date)}</p>}
+                    {article.pub_date && <p>{formatDate(article.pub_date)}</p>}
                   </div>
                 </div>
               </Link>
