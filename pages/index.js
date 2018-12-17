@@ -5,7 +5,7 @@ import fetch from 'isomorphic-unfetch';
 import debounce  from 'lodash/debounce';
 
 import { BASE_URL, formatDate } from '../constants';
-import "../style.css"
+import "../style.css";
 
 export default class extends React.Component {
   
@@ -24,7 +24,8 @@ export default class extends React.Component {
 
   static async getInitialProps({req, query}) {
     const q = query.q ? query.q.trim() : '';
-    const url = !!q ? BASE_URL +'&q=' + q : BASE_URL;
+    // const url = !!q ? BASE_URL +'&q=' + q : BASE_URL;
+    const url = BASE_URL + (!!q ? '&q='+ q : '');
     const res = await fetch(url);
     const data = await res.json();
   
@@ -51,17 +52,24 @@ export default class extends React.Component {
     });
   }
 
+  getUrl(q, sort) {
+    return BASE_URL + (!!q ? '&q='+ q : '') + ( sort !== 'None' ? '&sort='+ sort: '');
+  } 
+
   changeSortOption(){
     this.setState({sortOption: this.sortOption.value});
-    const url = BASE_URL + (!!this.state.q ? '&q='+ this.state.q : '') + ( this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
+    const url = this.getUrl(this.state.q, this.sortOption.value);
+    //const url = BASE_URL + (!!this.state.q ? '&q='+ this.state.q : '') + ( this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
     this.fetchUrl(url);
   }
 
   handleInputChange() {
+    debugger;
     const value = this.search.value;
     this.setState({q: value});
     const q = value ? value.trim() : '';
-    const url = BASE_URL + (!!q ? '&q='+ q : '') + (!!this.state.sortOption ? '&sort='+ this.state.sortOption : '');
+    //const url = this.getUrl(q, this.state.sortOption);
+    const url = BASE_URL + (!!q ? '&q='+ q : '') + (this.sortOption.value!== 'None' ? '&sort='+ this.sortOption.value : '');
     this.fetchUrl(url);
   }
 
